@@ -1,53 +1,6 @@
 <%@page import="AdminModel.Admin"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-	if (request.getParameter("nic") != null) {
-		Admin adminObj = new Admin();
-		String stsMsg = "";
-
-		if (request.getParameter("hidUsersIDSave") == "") {
-			stsMsg = adminObj.createEmployees(request.getParameter("name"), request.getParameter("nic"),
-					request.getParameter("email"), request.getParameter("pwd"), request.getParameter("status"));
-		} else {
-			stsMsg = adminObj.updateEmployees(request.getParameter("hidUsersIDSave"),
-					request.getParameter("name"), request.getParameter("nic"), request.getParameter("email"),
-					request.getParameter("pwd"), request.getParameter("status"));
-			//request.getParameter("update_status"));
-
-		}
-
-		session.setAttribute("statusMsg", stsMsg);
-		//response.sendRedirect("loginGui.jsp");
-
-	}
-
-	//delete
-	if (request.getParameter("hidDocIDDelete") != null) {
-		Admin adminObj = new Admin();
-		String stsMsg = adminObj.deleteDoctors(request.getParameter("hidDocIDDelete"));
-		session.setAttribute("statusMsg", stsMsg);
-	}
-	if (request.getParameter("hidPatientIDDelete") != null) {
-		Admin adminObj = new Admin();
-		String stsMsg = adminObj.deletePatient(request.getParameter("hidPatientIDDelete"));
-		session.setAttribute("statusMsg", stsMsg);
-	}
-	if (request.getParameter("hidHosIDDelete") != null) {
-		Admin adminObj = new Admin();
-		String stsMsg = adminObj.deleteHospitalUsers(request.getParameter("hidHosIDDelete"));
-		session.setAttribute("statusMsg", stsMsg);
-	}
-	//if (request.getParameter("hidUserIDDelete") != null)
-	//{
-	//Admin adminObj = new Admin();
-	//String stsMsg = adminObj.deleteEmployee(request.getParameter("hidUserIDDelete"));
-	//request.getParameter("status"),
-	//request.getParameter("status2"));
-
-	// session.setAttribute("statusMsg", stsMsg);
-	//}
-%>
 
 
 <!DOCTYPE html>
@@ -62,6 +15,7 @@
 </head>
 <body>
 	<div class="container">
+
 		<form class="form-inline" method="post" action="search.jsp">
 			<input type="text" name="roll_no" class="form-control"
 				placeholder="Search roll no..">
@@ -70,57 +24,70 @@
 	</div>
 
 
-	<h2>Administration</h2>
+
 	<br>
 	<br>
 	<fieldset>
-		<form id="usersForm" name="usersForm" method="post" action="admin.jsp">
-			<legend>Create and Delete</legend>
-			&nbsp;&nbsp; a &nbsp;&nbsp; <select name="status" id="status">
-				<option value="patient">Patient</option>
-				<option value="doctor">Doctor</option>
-				<option value="hospital">Hospital</option>
-			</select> <br> <br> Name <input type="text" name="name" id="name">
-			<br> <br> NIC <input type="text" name="nic" id="nic">
-			<br> <br> Email <input type="email" name="email" id="email">
-			<br> <br> Password <input type="password" name="pwd"
-				id="pwd"> <br> <br> <input type="button"
-				name="submitusers" id="submitusers" value="save"
-				class="btn btn-primary"> <input type="hidden"
-				id="hidUsersIDSave" name="hidUsersIDSave" value="">
-		</form>
-		<div id="alertSuccess" class="alert alert-success"></div>
-		<div id="alertError" class="alert alert-danger"></div>
-		<%
-			out.print(session.getAttribute("statusMsg"));
-		%>
-		<br>
+		<div class="container">
+			<div class="row">
+				<div class="col-6">
+					<h2>Administration</h2>
+					<form id="usersForm" name="usersForm" method="post"
+						action="admin.jsp">
+						<legend>Create and Delete</legend>
+						&nbsp;&nbsp; a &nbsp;&nbsp; <select name="status" id="status">
+							<option value="doctor">Doctor</option>
+							<option value="patient">Patient</option>
+							<option value="hospital">Hospital</option>
+						</select> <br> <br> Name <input type="text" name="name" id="name" class="form-control form-control-sm">
+						<br> <br> NIC <input type="text" name="nic" id="nic" class="form-control form-control-sm">
+						<br> <br> Email <input type="email" name="email"id="email" class="form-control form-control-sm"> 
+						<br> <br> Password <input type="password" name="pwd" id="pwd" class="form-control form-control-sm"> <br> <br>
+						<input id="submitusers" type="button" name="submitusers" value="save" class="btn btn-primary">
+						<input type="hidden" id="hidUsersIDSave" name="hidUsersIDSave" value="">
+					</form>
+					<div id="alertSuccess" class="alert alert-success"></div>
+					<div id="alertError" class="alert alert-danger"></div>
+					
+					<br>
+				</div>
+			</div>
+		</div>
 	</fieldset>
 	<br>
 	<br>
 
 	<fieldset>
 		<legend>Available Doctors</legend>
+			
+		<div id="divDocGrid">
 		<p>
 			<%
 				Admin adminObject = new Admin();
 				out.print(adminObject.readDoctors());
 			%>
-
-		</p>
+			<br>
+			<br>
+			
+			</p>
+		</div>
+	
 	</fieldset>
 	<br>
 	<br>
 
 	<fieldset>
 		<legend>Registered Patients</legend>
+		<div id="divPatientGrid">
 		<p>
-			<%
+		<%
 				Admin newobj = new Admin();
 				out.print(newobj.readPatient());
 			%>
+			
 
 		</p>
+		</div>
 	</fieldset>
 	<br>
 	<br>
