@@ -32,6 +32,7 @@ public class Admin {
 	}
 	
 	public String readDoctors()
+
 	{
 		String output= "";
 		
@@ -45,13 +46,12 @@ public class Admin {
 				return "error while connecting to the database for reading";
 			}
 			
-			output = "<table border=\"1\"><tr><th>Doctor name</th>"
+			output = "<table border='1'><tr><th>Doctor name</th>"
 					 +"<th>Doctor nic</th>"
 					 + "<th>doctor email</th>"
 					 + "<th>doctor password</th>"
 					+ "<th>Register Date</th>"
 					+ "<th>Update</th><th>Remove</th></tr>";
-			
 		
 			
 					
@@ -72,7 +72,7 @@ public class Admin {
 				String depwd=rs.getString("doc_password");
 				String ddate=rs.getString("doc_date");
 				
-				output += "<tr><td><input id=\"hidUserIDUpdate\"name=\"hidItemIDUpdate\"type=\"hidden\" value=\"" + did + "\">"
+				output += "<tr><td><input id='hidUserIDUpdate' name='hidUserIDUpdate' type='hidden' value='" + did + "'>"
 						 + dname + "</td>"; 
 				//output += "<tr><td>" + dname + "</td>"; 
 				output += "<td>" + dnic + "</td>"; 
@@ -81,16 +81,13 @@ public class Admin {
 				output += "<td>" + ddate + "</td>";
 				
 				
-				output += "<td><input name=\"btnUpdate\" type=\"button\"value=\"Update\" class=\"btnUpdate btn btn-secondary\"></td>";
-				output += "<td><form method=\"post\" action=\"admin.jsp\">"
-						+ "<input name=\"btnRemove\" type=\"submit\""
-						+ "value=\"Remove\" class=\"btn btn-danger\">"
-						+ "<input name=\"hidDocIDDelete\" type=\"hidden\""
-						+ "value=\"" + did + "\">" + "</form></td></tr>";
+				output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'</td>"
+						+ "<td><input name='btnRemove' type='button'"
+						+ "value='Remove' class='btnRemove btn btn-danger' data-itemid='"
+						+ did + "'>" + "</td></tr>"; 
+						
 				
 			}
-
-			
 			con.close();
 			
 			output+="</table>";
@@ -109,9 +106,6 @@ public class Admin {
 	
 	
 	public String readPatient()
-
-
-
 	{
 
 		{
@@ -127,7 +121,7 @@ public class Admin {
 					return "error while connecting to the database for reading";
 				}
 				
-				output = "<table border=\"1\"><tr><th>Patient name</th>"
+				output = "<table border='1'><tr><th>Patient name</th>"
 						 +"<th>Patient nic</th>"
 						 + "<th>Patient email</th>"
 						 + "<th>Patient password</th>"
@@ -154,8 +148,8 @@ public class Admin {
 					String pepwd=rs.getString("patient_pwd");
 					String regDate=rs.getString("patient_date");
 					
-					output += "<tr><td><input id=\"hidUserIDUpdate\"name=\"hidItemIDUpdate\"type=\"hidden\" value=\"" + pid + "\">"
-							 + pname + "</td>";
+					output += "<tr><td><input id='hidUserIDUpdate' name='hidItemIDUpdate' type='hidden' value='" + pid + "'>"
+							 + pname + "</td>"; 
 					
 				 
 					output += "<td>" + pnic + "</td>"; 
@@ -163,14 +157,10 @@ public class Admin {
 					output += "<td>" + pepwd + "</td>";
 					output += "<td>" + regDate + "</td>";
 					
-					output += "<td><input name=\"btnUpdate\" "
-							+ "type=\"button\" value=\"Update\" "
-							+ "class=\" btnUpdate btn btn-secondary\"></td>"
-							+ "<td><form method=\"post\" action=\"admin.jsp\">"
-							+ "<input name=\"btnRemove\" type=\"submit\""
-							+ "value=\"Remove\" class=\"btn btn-danger\">"
-							+ "<input name=\"hidPatientIDDelete\" type=\"hidden\""
-							+ "value=\"" + pid + "\">" + "</form></td></tr>";
+					output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'</td>"
+							+ "<td><input name='btnRemove' type='button'"
+							+ "value='Remove' class='btnRemove btn btn-danger' data-itemid='"
+							+ pid + "'>" + "</td></tr>"; 
 					
 					
 				}
@@ -270,8 +260,6 @@ public class Admin {
 	}
 
 	public String createEmployees(String name,String nic,String email,String pwd,String status)
-
-
 	{
 		String output="";
 		if (status.equals("patient")) {
@@ -305,7 +293,12 @@ public class Admin {
 				
 				System.out.print("i run insert patient");
 				output = "Inserted Successfully to the Patient";
+				if(status=="patient") {
+				String newPatient = readPatient();
+				output = "{\"status\":\"success\", \"data\": \"" + newPatient + "\"}";
+				}
 			} catch (Exception e) {
+				output = "{\"status\":\"error\", \"data\": \"Error while inserting the patient.\"}"; 
 				e.printStackTrace();
 				System.out.print("i dont run insert patient");
 				
@@ -343,7 +336,11 @@ public class Admin {
 					preparedStmt.execute();
 					conn.close();
 					output = "Inserted Successfully to the Doctor";
+					
+					String newDoctors = readDoctors();
+					output = "{\"status\":\"success\", \"data\": \"" + newDoctors + "\"}";
 				} catch (Exception e) {
+					 output = "{\"status\":\"error\", \"data\": \"Error while inserting the doctors.\"}"; 
 					e.printStackTrace();
 				}
 				//return output;
@@ -394,7 +391,6 @@ public class Admin {
 	}
 	
 	public String deleteDoctors(String docID)
-
 {
 		String output="";
 		
@@ -415,9 +411,13 @@ public class Admin {
 			connection.close();
 			System.out.println("deleted");
 			output= "deleted successfully doctor";
+			
+			String newDoctors = readDoctors();
+			output = "{\"status\":\"success\", \"data\": \"" + newDoctors + "\"}";
 		}
 		catch(Exception e)
 		{
+			output = "{\"status\":\"error\", \"data\": \"Error while deleting the doctors.\"}"; 
 			System.out.println("not deleted");
 			output="error while deleting the patient";
 			System.err.println(e.getMessage());
@@ -490,6 +490,7 @@ public class Admin {
 		
 	
 	public String updateEmployees(String id,String name,String nic,String email,String password,String status)
+
 	{
 		String output="";
 	
@@ -519,9 +520,12 @@ public class Admin {
 						connection.close();
 						System.out.println("updated");
 						output="updated doctor successfully";
+						String newDoctors = readDoctors();
+						output = "{\"status\":\"success\", \"data\": \"" + newDoctors + "\"}";
 			}
 			catch (Exception e) {
 				// TODO: handle exception
+				 output = "{\"status\":\"error\", \"data\": \"Error while updating the doctors.\"}"; 
 				System.out.println("not updated");
 				output="error while updating the appointment";
 				System.err.println(e.getMessage());
