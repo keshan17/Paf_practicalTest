@@ -1,6 +1,6 @@
 package AdminService;
 
-import AdminModel.Admin;
+import com.Admin;
 
 
 

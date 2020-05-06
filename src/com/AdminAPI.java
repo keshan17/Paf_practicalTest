@@ -1,6 +1,7 @@
-package AdminModel;
+package com;
 
-import AdminModel.*;
+import com.Admin;
+import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,8 @@ public class AdminAPI extends HttpServlet {
 		// TODO Auto-generated method stub
 		// doGet(request, response);
 		String outputString = adminObj.createEmployees(request.getParameter("name"), request.getParameter("nic"),
-				request.getParameter("email"), request.getParameter("pwd"), request.getParameter("status"));
+				request.getParameter("email"),request.getParameter("pnumber"), 
+				request.getParameter("pwd"), request.getParameter("status"));
 
 		response.getWriter().write(outputString);
 	}
@@ -65,6 +67,7 @@ public class AdminAPI extends HttpServlet {
 										paras.get("name").toString(), 
 										paras.get("nic").toString(), 
 										paras.get("email").toString(),
+										paras.get("pnumber").toString(),
 										paras.get("pwd").toString(), 
 										paras.get("status").toString());
 		
@@ -79,9 +82,12 @@ public class AdminAPI extends HttpServlet {
 		
 		Map paras = getParasMap(request); 
 		
+		
 		String outputString=adminObj.deleteDoctors(paras.get("did").toString());
 		response.getWriter().write(outputString);
 	}
+	
+	
 
 	private static Map getParasMap(HttpServletRequest request) 
 	{
